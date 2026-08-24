@@ -1,0 +1,185 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+/* ------------------------------------------------------------------ */
+/* Design tokens                                                      */
+/* Light theme is the base :root. Dark-mode blocks only redefine      */
+/* tokens, never introduce new selectors for components.              */
+/* ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+
+  --surface-0: #f5f6f4;
+  --surface-1: #ffffff;
+  --surface-2: #ffffff;
+  --surface-2-border: #e2e5e1;
+  --surface-sunken: #edefec;
+
+  --ink-1: #10181c;
+  --ink-2: #45524f;
+  --ink-3: #6f7c78;
+  --line: #dde1dc;
+  --line-strong: #c7cdc6;
+
+  --brand: #14877b;
+  --brand-strong: #0d6c62;
+  --brand-soft: #e3f2ee;
+  --brand-ink: #073b35;
+
+  --gold: #b5822a;
+  --gold-strong: #8f6720;
+  --gold-soft: #f7ecd7;
+
+  --deep: #1c2b45;
+  --deep-soft: #e7ebf2;
+
+  --ok: #2f8a56;
+  --ok-soft: #e4f3ea;
+  --warn: #a8671b;
+  --warn-soft: #faf0dc;
+  --crit: #b3413a;
+  --crit-soft: #fbe9e7;
+
+  --shadow-color: 30 40 35;
+  --scrim: rgba(10, 14, 12, 0.55);
+
+  --font-display: "Manrope", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --surface-0: #0a0e11;
+    --surface-1: #0f1417;
+    --surface-2: #141a1e;
+    --surface-2-border: #232b30;
+    --surface-sunken: #06090b;
+
+    --ink-1: #eaeeee;
+    --ink-2: #aab4b2;
+    --ink-3: #798482;
+    --line: #232b30;
+    --line-strong: #303a40;
+
+    --brand: #2bcbb8;
+    --brand-strong: #4fe0cd;
+    --brand-soft: #10302c;
+    --brand-ink: #bdf3e9;
+
+    --gold: #e0ac52;
+    --gold-strong: #edc37c;
+    --gold-soft: #362a15;
+
+    --deep: #a9bcdf;
+    --deep-soft: #1a2333;
+
+    --ok: #56c98a;
+    --ok-soft: #123322;
+    --warn: #e0a53f;
+    --warn-soft: #362b13;
+    --crit: #e2726a;
+    --crit-soft: #3a1917;
+
+    --scrim: rgba(3, 5, 6, 0.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-0: #0a0e11;
+  --surface-1: #0f1417;
+  --surface-2: #141a1e;
+  --surface-2-border: #232b30;
+  --surface-sunken: #06090b;
+
+  --ink-1: #eaeeee;
+  --ink-2: #aab4b2;
+  --ink-3: #798482;
+  --line: #232b30;
+  --line-strong: #303a40;
+
+  --brand: #2bcbb8;
+  --brand-strong: #4fe0cd;
+  --brand-soft: #10302c;
+  --brand-ink: #bdf3e9;
+
+  --gold: #e0ac52;
+  --gold-strong: #edc37c;
+  --gold-soft: #362a15;
+
+  --deep: #a9bcdf;
+  --deep-soft: #1a2333;
+
+  --ok: #56c98a;
+  --ok-soft: #123322;
+  --warn: #e0a53f;
+  --warn-soft: #362b13;
+  --crit: #e2726a;
+  --crit-soft: #3a1917;
+
+  --scrim: rgba(3, 5, 6, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--surface-0);
+  color: var(--ink-1);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+
+.font-mono-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--brand);
+  color: var(--surface-1);
+}
+
+a {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* thin, brand-tinted scrollbars for the platform shell */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 8px;
+}
