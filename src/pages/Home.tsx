@@ -4,33 +4,37 @@ import { useEffect, useState, type ReactNode } from "react";
 import { EASE } from "../lib/motion";
 import { useConsult } from "../state/consult";
 import LiveMetricPreview from "../components/LiveMetricPreview";
-import MatrixHeadline, { type MatrixPhrase } from "../components/MatrixHeadline";
+import RotatingHeadline, { type HeadlinePhrase } from "../components/RotatingHeadline";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 };
 
-const HEADLINES: MatrixPhrase[] = [
+const HEADLINES: HeadlinePhrase[] = [
   {
     id: "legally",
-    text: "Know what a parcel can legally become — before you spend a rupee on design.",
+    before: "Know what a parcel can ",
     highlight: "legally become",
+    after: " — before you spend a rupee on design.",
   },
   {
     id: "clarity",
-    text: "Turn planning rules into buildable clarity — in minutes, not months.",
+    before: "Turn planning rules into ",
     highlight: "buildable clarity",
+    after: " — in minutes, not months.",
   },
   {
     id: "confidence",
-    text: "Move from speculation to cited confidence — every number labelled, every limit explained.",
+    before: "Move from speculation to ",
     highlight: "cited confidence",
+    after: " — every number labelled, every limit explained.",
   },
   {
     id: "ai",
-    text: "AI-enabled planning assistance for every step — from sketch to capacity to brief.",
+    before: "AI-enabled planning assistance for ",
     highlight: "every step",
+    after: " — from sketch to capacity to brief.",
   },
 ];
 
@@ -113,8 +117,8 @@ export default function Home() {
           className="pointer-events-none absolute top-40 left-[-15%] h-[420px] w-[420px] rounded-full opacity-[0.12] blur-3xl"
           style={{ background: "radial-gradient(circle, var(--gold), transparent 65%)" }}
         />
-        <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <motion.div initial="hidden" animate="show" variants={fadeUp}>
+        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
+          <motion.div initial="hidden" animate="show" variants={fadeUp} className="min-w-0">
             <span
               className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
               style={{ background: "var(--brand-soft)", color: "var(--brand-ink)" }}
@@ -122,13 +126,13 @@ export default function Home() {
               AI-enabled planning assistance
             </span>
 
-            <MatrixHeadline
+            <RotatingHeadline
               phrases={HEADLINES}
               activeIndex={headlineIdx}
-              className="mt-5 text-[2.35rem] font-extrabold leading-[1.12] sm:text-5xl lg:text-[3.25rem]"
+              className="text-[1.75rem] font-extrabold leading-[1.18] sm:text-4xl lg:text-[2.75rem] lg:leading-[1.14]"
             />
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed" style={{ color: "var(--ink-2)" }}>
+            <p className="mt-6 max-w-xl text-base leading-relaxed sm:text-lg" style={{ color: "var(--ink-2)" }}>
               AlphaGRID converts planning regulations, your parcel's geometry, and your intent into a
               cited, explainable development-capacity assessment — with map sketching, animated 3D massing,
               and guidance at every step.
@@ -176,6 +180,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            className="min-w-0 lg:max-w-[520px] lg:justify-self-end"
           >
             <LiveMetricPreview />
           </motion.div>
