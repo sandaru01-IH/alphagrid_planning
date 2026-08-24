@@ -5,6 +5,7 @@ import { EASE } from "../lib/motion";
 import { useConsult } from "../state/consult";
 import LiveMetricPreview from "../components/LiveMetricPreview";
 import RotatingHeadline, { type HeadlinePhrase } from "../components/RotatingHeadline";
+import HeroVideoBackground from "../components/HeroVideoBackground";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
@@ -107,9 +108,10 @@ export default function Home() {
   return (
     <div>
       <section className="relative overflow-hidden px-6 pt-16 pb-24 md:pt-24">
+        <HeroVideoBackground />
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-40 right-[-10%] h-[520px] w-[520px] rounded-full opacity-[0.16] blur-3xl"
+          className="pointer-events-none absolute -top-40 right-[-10%] h-[520px] w-[520px] rounded-full opacity-[0.10] blur-3xl"
           style={{ background: "radial-gradient(circle, var(--brand), transparent 65%)" }}
         />
         <div

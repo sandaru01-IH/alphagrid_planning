@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 import { useConsult } from "../state/consult";
+import { COMPANY } from "../lib/company";
 
 const LINKS = [
   { to: "/product", label: "Platform" },
@@ -140,8 +141,8 @@ function Footer() {
           className="mt-12 flex flex-col gap-2 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between"
           style={{ borderColor: "var(--surface-2-border)", color: "var(--ink-3)" }}
         >
-          <p>© {new Date().getFullYear()} AlphaGRID (Pvt) Ltd. Regulation citations current as of publication; always confirm against the gazetted instrument before a transaction.</p>
-          <p>UDA Planning &amp; Development Regulations · cited capacity intelligence</p>
+          <p>© {new Date().getFullYear()} {COMPANY.legalName}. Regulation citations current as of publication; always confirm against the gazetted instrument before a transaction.</p>
+          <p>{COMPANY.website} · {COMPANY.email} · {COMPANY.phoneDisplay}</p>
         </div>
       </div>
     </footer>

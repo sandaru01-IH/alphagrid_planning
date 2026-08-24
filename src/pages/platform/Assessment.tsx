@@ -12,7 +12,9 @@ import ComparisonTable from "../../components/ComparisonTable";
 import SitePlan2D from "../../components/SitePlan2D";
 import Massing3D, { type MassingTarget } from "../../three/Massing3D";
 import ParcelMap from "../../components/ParcelMap";
+import ReportActions from "../../components/ReportActions";
 import { useConsult } from "../../state/consult";
+import type { ReportMeta } from "../../lib/report";
 
 function cssVar(name: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
@@ -70,6 +72,16 @@ export default function Assessment() {
       active.governingConstraint === "setback"
         ? cssVar("--massing-warn", "#9a7428")
         : cssVar("--massing-accent", "#0f6f66"),
+  };
+
+  const reportMeta: ReportMeta = {
+    siteAreaM2,
+    frontageM,
+    roadWidthM,
+    density,
+    programType,
+    parcelSource: parcelRing && parcelRing.length >= 3 ? "map sketch" : "manual entry",
+    vertexCount: parcelRing?.length,
   };
 
   return (
@@ -202,6 +214,22 @@ export default function Assessment() {
               Scenario comparison
             </h3>
             <ComparisonTable scenarios={scenarios} activeId={scenarioId} />
+          </div>
+
+          <div
+            className="rounded-2xl border p-5"
+            style={{ borderColor: "var(--surface-2-border)", background: "var(--surface-1)" }}
+          >
+            <h3 className="text-sm font-bold" style={{ color: "var(--ink-1)" }}>
+              Professional report
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ink-2)" }}>
+              Generate a branded assessment report with AlphaGRID business details, all scenarios, and compliance
+              summary — ready to share with investors or consultants.
+            </p>
+            <div className="mt-4">
+              <ReportActions meta={reportMeta} compact />
+            </div>
           </div>
         </div>
       </div>
