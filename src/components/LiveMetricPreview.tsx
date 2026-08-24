@@ -31,7 +31,7 @@ export default function LiveMetricPreview() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold" style={{ color: "var(--ink-3)" }}>
-            Galle Road frontage · Panadura
+            Sample coastal frontage
           </p>
           <p className="text-sm font-bold" style={{ color: "var(--ink-1)" }}>
             950 m² · mixed use

@@ -127,7 +127,7 @@ export default function PlatformLayout() {
         >
           <div className="flex items-center gap-3">
             <span className="text-sm font-semibold" style={{ color: "var(--ink-1)" }}>
-              Panadura pilot workspace
+              Panadura planning workspace
             </span>
             <span
               className="rounded-full px-2.5 py-0.5 text-[11px] font-semibold"

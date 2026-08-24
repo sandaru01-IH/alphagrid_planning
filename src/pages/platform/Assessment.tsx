@@ -11,6 +11,7 @@ import CommandBox from "../../components/CommandBox";
 import ComparisonTable from "../../components/ComparisonTable";
 import SitePlan2D from "../../components/SitePlan2D";
 import Massing3D, { type MassingTarget } from "../../three/Massing3D";
+import ParcelMap from "../../components/ParcelMap";
 import { useConsult } from "../../state/consult";
 
 function cssVar(name: string, fallback: string) {
@@ -19,7 +20,18 @@ function cssVar(name: string, fallback: string) {
 }
 
 export default function Assessment() {
-  const { siteAreaM2, frontageM, roadWidthM, density, programType, scenarioId, setScenario } = useAssessment();
+  const {
+    siteAreaM2,
+    frontageM,
+    roadWidthM,
+    density,
+    programType,
+    scenarioId,
+    setScenario,
+    parcelRing,
+    applyDrawnParcel,
+    clearDrawnParcel,
+  } = useAssessment();
   const { open } = useConsult();
   const { resolved } = useTheme();
   const [autoRotate, setAutoRotate] = useState(true);
@@ -70,6 +82,11 @@ export default function Assessment() {
           <h1 className="mt-1 text-2xl font-bold" style={{ color: "var(--ink-1)" }}>
             {siteAreaM2} m² · {programType.replace("_", " ")} · {density} density
           </h1>
+          {parcelRing && parcelRing.length >= 3 && (
+            <p className="mt-1 text-xs font-medium" style={{ color: "var(--brand)" }}>
+              Geometry from map sketch · {parcelRing.length} vertices
+            </p>
+          )}
         </div>
         <button
           onClick={() => open("Assessment review")}
@@ -79,6 +96,13 @@ export default function Assessment() {
           Have an analyst review this →
         </button>
       </div>
+
+      <ParcelMap
+        ring={parcelRing}
+        onApply={applyDrawnParcel}
+        onClear={clearDrawnParcel}
+        height={380}
+      />
 
       <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
         <div className="space-y-6">

@@ -196,3 +196,23 @@ a {
   background: var(--line-strong);
   border-radius: 8px;
 }
+
+/* Leaflet — keep controls above canvas, below app chrome */
+.leaflet-container {
+  font-family: var(--font-body);
+  background: var(--surface-sunken);
+  z-index: 0;
+}
+.leaflet-control-attribution {
+  font-size: 10px;
+  background: color-mix(in srgb, var(--surface-1) 88%, transparent) !important;
+  color: var(--ink-3);
+}
+.leaflet-bar a {
+  background: var(--surface-1) !important;
+  color: var(--ink-1) !important;
+  border-bottom-color: var(--line) !important;
+}
+.leaflet-bar a:hover {
+  background: var(--surface-2) !important;
+}

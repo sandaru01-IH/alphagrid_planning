@@ -21,8 +21,7 @@ export default function Overview() {
           Good to see you back
         </h1>
         <p className="mt-1 text-sm" style={{ color: "var(--ink-2)" }}>
-          Three saved parcels in the Panadura pilot zone. Pick one up where you left off, or start a fresh
-          assessment.
+          Saved sample parcels ready to open — or sketch a new boundary on the map and run a fresh assessment.
         </p>
       </div>
 
@@ -106,10 +105,10 @@ export default function Overview() {
           style={{ borderColor: "var(--line-strong)" }}
         >
           <p className="text-sm font-semibold" style={{ color: "var(--ink-1)" }}>
-            New parcel
+            Draw a new parcel
           </p>
           <p className="mt-1 text-xs" style={{ color: "var(--ink-3)" }}>
-            Enter your own site geometry
+            Sketch the land boundary on the map
           </p>
           <Link
             to="/platform/assessment"

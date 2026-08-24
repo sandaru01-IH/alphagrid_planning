@@ -39,6 +39,9 @@ export default function InputPanel() {
       <h3 className="text-sm font-bold" style={{ color: "var(--ink-1)" }}>
         Parcel &amp; program
       </h3>
+      <p className="mt-1 text-[11px] leading-snug" style={{ color: "var(--ink-3)" }}>
+        Draw on the map above, or edit the numbers directly.
+      </p>
       <div className="mt-4 grid grid-cols-2 gap-3">
         <Field label="Site area (m²)">
           <input

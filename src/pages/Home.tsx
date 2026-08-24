@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, type ReactNode } from "react";
 import { EASE } from "../lib/motion";
 import { useConsult } from "../state/consult";
 import LiveMetricPreview from "../components/LiveMetricPreview";
@@ -9,10 +10,37 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 };
 
+const HEADLINES = [
+  {
+    id: "legally",
+    before: "Know what a parcel can ",
+    highlight: "legally become",
+    after: " — before you spend a rupee on design.",
+  },
+  {
+    id: "clarity",
+    before: "Turn planning rules into ",
+    highlight: "buildable clarity",
+    after: " — in minutes, not months.",
+  },
+  {
+    id: "confidence",
+    before: "Move from speculation to ",
+    highlight: "cited confidence",
+    after: " — every number labelled, every limit explained.",
+  },
+  {
+    id: "ai",
+    before: "AI-enabled planning assistance for ",
+    highlight: "every step",
+    after: " — from sketch to capacity to brief.",
+  },
+];
+
 const CAPABILITIES = [
   {
     title: "Parcel intelligence",
-    body: "Enter a site's area, frontage and road width and get the FAR, coverage, setback and height regime that governs it — cross-referenced against tabulated UDA schedules, with interpolation flagged whenever a plot falls between bands.",
+    body: "Enter a site's area, frontage and road width — or draw the boundary on the map — and get the FAR, coverage, setback and height regime that governs it.",
   },
   {
     title: "Scenario generation",
@@ -64,6 +92,16 @@ const MODES = [
 
 export default function Home() {
   const { open } = useConsult();
+  const [headlineIdx, setHeadlineIdx] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setHeadlineIdx((i) => (i + 1) % HEADLINES.length);
+    }, 5200);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const headline = HEADLINES[headlineIdx];
 
   return (
     <div>
@@ -85,16 +123,28 @@ export default function Home() {
               className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
               style={{ background: "var(--brand-soft)", color: "var(--brand-ink)" }}
             >
-              Panadura pilot · live regulation engine
+              AI-enabled planning assistance
             </span>
-            <h1 className="mt-5 text-[2.6rem] font-extrabold leading-[1.06] sm:text-6xl">
-              Know what a parcel can{" "}
-              <span style={{ color: "var(--brand)" }}>legally become</span> — before you spend a rupee on design.
-            </h1>
+            <div className="relative mt-5 min-h-[7.5rem] sm:min-h-[9.5rem]">
+              <AnimatePresence mode="wait">
+                <motion.h1
+                  key={headline.id}
+                  initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+                  transition={{ duration: 0.55, ease: EASE }}
+                  className="absolute inset-x-0 top-0 text-[2.6rem] font-extrabold leading-[1.06] sm:text-6xl"
+                >
+                  {headline.before}
+                  <span style={{ color: "var(--brand)" }}>{headline.highlight}</span>
+                  {headline.after}
+                </motion.h1>
+              </AnimatePresence>
+            </div>
             <p className="mt-6 max-w-xl text-lg leading-relaxed" style={{ color: "var(--ink-2)" }}>
-              AlphaGRID converts Sri Lanka's planning regulations, your parcel's geometry, and your intent into a
-              cited, explainable development-capacity assessment — with an animated 3D massing model, not a static
-              PDF.
+              AlphaGRID converts planning regulations, your parcel's geometry, and your intent into a
+              cited, explainable development-capacity assessment — with map sketching, animated 3D massing,
+              and guidance at every step.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
@@ -112,10 +162,25 @@ export default function Home() {
                 Get free consultancy
               </button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm" style={{ color: "var(--ink-3)" }}>
-              <Stat value="13/13" label="validation tests passing" />
-              <Stat value="4" label="confidence tiers on every figure" />
-              <Stat value="3" label="scenarios per parcel" />
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-sm" style={{ color: "var(--ink-2)" }}>
+              <HeroPoint>AI guidance from first sketch to final brief</HeroPoint>
+              <HeroPoint>Draw your land on a live map</HeroPoint>
+              <HeroPoint>Cited capacity — never a black box</HeroPoint>
+            </div>
+            <div className="mt-4 flex gap-1.5" aria-hidden>
+              {HEADLINES.map((h, i) => (
+                <button
+                  key={h.id}
+                  type="button"
+                  onClick={() => setHeadlineIdx(i)}
+                  className="h-1.5 rounded-full transition-all"
+                  style={{
+                    width: i === headlineIdx ? 22 : 8,
+                    background: i === headlineIdx ? "var(--brand)" : "var(--line-strong)",
+                  }}
+                  aria-label={`Show headline ${i + 1}`}
+                />
+              ))}
             </div>
           </motion.div>
 
@@ -284,13 +349,16 @@ export default function Home() {
   );
 }
 
-function Stat({ value, label }: { value: string; label: string }) {
+function HeroPoint({ children }: { children: ReactNode }) {
   return (
-    <div>
-      <span className="font-mono-data text-lg font-semibold" style={{ color: "var(--ink-1)" }}>
-        {value}
-      </span>{" "}
-      <span>{label}</span>
+    <div className="flex items-center gap-2">
+      <span
+        className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[10px] font-bold"
+        style={{ background: "var(--brand-soft)", color: "var(--brand)" }}
+      >
+        ✓
+      </span>
+      <span>{children}</span>
     </div>
   );
 }

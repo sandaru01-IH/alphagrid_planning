@@ -130,7 +130,7 @@ function Footer() {
           <FooterCol
             title="Company"
             links={[
-              ["Panadura pilot", "/methodology"],
+              ["Coverage area", "/methodology"],
               ["Contact", "/pricing"],
             ]}
           />
@@ -140,7 +140,7 @@ function Footer() {
           style={{ borderColor: "var(--surface-2-border)", color: "var(--ink-3)" }}
         >
           <p>© {new Date().getFullYear()} AlphaGRID (Pvt) Ltd. Regulation citations current as of publication; always confirm against the gazetted instrument before a transaction.</p>
-          <p>Panadura pilot · UDA Planning &amp; Development Regulations</p>
+          <p>UDA Planning &amp; Development Regulations · cited capacity intelligence</p>
         </div>
       </div>
     </footer>

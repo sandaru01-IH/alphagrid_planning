@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import type { DensityTier, ProgramType } from "../lib/engine";
+import type { LatLng } from "../lib/geo";
 
 export type ScenarioId = "conservative" | "balanced" | "maximum_yield";
 export type ViewerMode = "developer" | "investor" | "professional";
@@ -12,12 +13,13 @@ export interface ParcelProfile {
   roadWidthM: number;
   density: DensityTier;
   programType: ProgramType;
+  ring?: LatLng[] | null;
 }
 
 export const SAVED_PARCELS: ParcelProfile[] = [
   {
     id: "panadura-01",
-    name: "Panadura — Galle Road frontage",
+    name: "Sample — Galle Road frontage",
     siteAreaM2: 950,
     frontageM: 22,
     roadWidthM: 12,
@@ -26,7 +28,7 @@ export const SAVED_PARCELS: ParcelProfile[] = [
   },
   {
     id: "panadura-02",
-    name: "Panadura — Wickramasinghepura lane",
+    name: "Sample — Wickramasinghepura lane",
     siteAreaM2: 200,
     frontageM: 10,
     roadWidthM: 9,
@@ -35,7 +37,7 @@ export const SAVED_PARCELS: ParcelProfile[] = [
   },
   {
     id: "panadura-03",
-    name: "Panadura — Kaldemulla arterial",
+    name: "Sample — Kaldemulla arterial",
     siteAreaM2: 3200,
     frontageM: 40,
     roadWidthM: 15,
@@ -55,6 +57,7 @@ interface AssessmentState {
   density: DensityTier;
   programType: ProgramType;
   scenarioId: ScenarioId;
+  parcelRing: LatLng[] | null;
 
   loadParcel: (p: ParcelProfile) => void;
   setField: <K extends "siteAreaM2" | "frontageM" | "roadWidthM" | "density" | "programType">(
@@ -62,6 +65,8 @@ interface AssessmentState {
     value: AssessmentState[K]
   ) => void;
   setScenario: (id: ScenarioId) => void;
+  applyDrawnParcel: (ring: LatLng[], metrics: { siteAreaM2: number; frontageM: number }) => void;
+  clearDrawnParcel: () => void;
 }
 
 const initial = SAVED_PARCELS[0];
@@ -77,6 +82,7 @@ export const useAssessment = create<AssessmentState>((set) => ({
   density: initial.density,
   programType: initial.programType,
   scenarioId: "balanced",
+  parcelRing: null,
 
   loadParcel: (p) =>
     set({
@@ -86,7 +92,16 @@ export const useAssessment = create<AssessmentState>((set) => ({
       roadWidthM: p.roadWidthM,
       density: p.density,
       programType: p.programType,
+      parcelRing: p.ring ?? null,
     }),
-  setField: (key, value) => set({ [key]: value } as Partial<AssessmentState>),
+  setField: (key, value) => set({ [key]: value, activeParcelId: "custom" } as Partial<AssessmentState>),
   setScenario: (id) => set({ scenarioId: id }),
+  applyDrawnParcel: (ring, metrics) =>
+    set({
+      activeParcelId: "drawn",
+      parcelRing: ring,
+      siteAreaM2: metrics.siteAreaM2,
+      frontageM: metrics.frontageM,
+    }),
+  clearDrawnParcel: () => set({ parcelRing: null, activeParcelId: "custom" }),
 }));
