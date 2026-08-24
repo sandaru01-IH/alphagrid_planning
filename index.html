@@ -7,6 +7,23 @@
     <title>AlphaGRID Development Intelligence</title>
   </head>
   <body>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("alphagrid-theme");
+          var pref = stored === "light" || stored === "dark" || stored === "system" ? stored : "light";
+          var resolved =
+            pref === "system"
+              ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+              : pref;
+          document.documentElement.setAttribute("data-theme", resolved);
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

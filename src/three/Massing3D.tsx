@@ -1,7 +1,8 @@
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, ContactShadows, Grid, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
+import { useTheme } from "../state/theme";
 
 export interface MassingTarget {
   key: string; // changes whenever the scenario/inputs meaningfully change, to retrigger the rise animation
@@ -15,13 +16,57 @@ export interface MassingTarget {
   color: string;
 }
 
-const FLOOR_COLOR_TOP = "#1c2b45";
+function readCssVar(name: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
+function useMassingPalette(resolved: "light" | "dark") {
+  const [palette, setPalette] = useState(() => ({
+    bg: readCssVar("--massing-bg", "#e8ece9"),
+    fog: readCssVar("--massing-fog", "#e8ece9"),
+    ground: readCssVar("--massing-ground", "#c5cec8"),
+    gridCell: readCssVar("--massing-grid-cell", "#c2cbc5"),
+    gridSection: readCssVar("--massing-grid-section", "#9aa69f"),
+    edge: readCssVar("--massing-edge", "#1a2420"),
+    parcel: readCssVar("--massing-parcel", "#7a8680"),
+    accent: readCssVar("--massing-accent", "#0f6f66"),
+    warn: readCssVar("--massing-warn", "#9a7428"),
+    top: readCssVar("--massing-top", "#1a2a42"),
+  }));
+
+  useEffect(() => {
+    setPalette({
+      bg: readCssVar("--massing-bg", "#e8ece9"),
+      fog: readCssVar("--massing-fog", "#e8ece9"),
+      ground: readCssVar("--massing-ground", "#c5cec8"),
+      gridCell: readCssVar("--massing-grid-cell", "#c2cbc5"),
+      gridSection: readCssVar("--massing-grid-section", "#9aa69f"),
+      edge: readCssVar("--massing-edge", "#1a2420"),
+      parcel: readCssVar("--massing-parcel", "#7a8680"),
+      accent: readCssVar("--massing-accent", "#0f6f66"),
+      warn: readCssVar("--massing-warn", "#9a7428"),
+      top: readCssVar("--massing-top", "#1a2a42"),
+    });
+  }, [resolved]);
+
+  return palette;
+}
 
 function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
 }
 
-function Building({ target }: { target: MassingTarget }) {
+function Building({
+  target,
+  topColor,
+  edgeColor,
+}: {
+  target: MassingTarget;
+  topColor: string;
+  edgeColor: string;
+}) {
   const groupRefs = useRef<(THREE.Group | null)[]>([]);
   const growth = useRef<number[]>([]);
   const dims = useRef({ w: target.footprintWidthM, d: target.footprintDepthM });
@@ -37,7 +82,6 @@ function Building({ target }: { target: MassingTarget }) {
 
   useFrame((state, delta) => {
     const t = state.clock.getElapsedTime();
-    // smoothly damp footprint dims toward target
     dims.current.w = THREE.MathUtils.damp(dims.current.w, target.footprintWidthM, 4, delta);
     dims.current.d = THREE.MathUtils.damp(dims.current.d, target.footprintDepthM, 4, delta);
 
@@ -85,7 +129,7 @@ function Building({ target }: { target: MassingTarget }) {
           <mesh castShadow receiveShadow>
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial
-              color={i === floors - 1 ? FLOOR_COLOR_TOP : target.color}
+              color={i === floors - 1 ? topColor : target.color}
               transparent
               opacity={0.35}
               roughness={0.55}
@@ -94,7 +138,7 @@ function Building({ target }: { target: MassingTarget }) {
           </mesh>
           <lineSegments scale={[1, 1, 1]}>
             <edgesGeometry args={[new THREE.BoxGeometry(1, 1, 1)]} />
-            <lineBasicMaterial color="#0a0e11" transparent opacity={0.25} />
+            <lineBasicMaterial color={edgeColor} transparent opacity={0.25} />
           </lineSegments>
         </group>
       ))}
@@ -110,11 +154,7 @@ function ParcelOutline({ w, d, color }: { w: number; d: number; color: string })
     [-w / 2, 0.01, d / 2],
     [-w / 2, 0.01, -d / 2],
   ];
-  return (
-    <>
-      <Line points={pts} color={color} lineWidth={1.5} dashed dashSize={0.6} gapSize={0.4} />
-    </>
-  );
+  return <Line points={pts} color={color} lineWidth={1.5} dashed dashSize={0.6} gapSize={0.4} />;
 }
 
 function Rig({ autoRotate }: { autoRotate: boolean }) {
@@ -133,22 +173,28 @@ function Rig({ autoRotate }: { autoRotate: boolean }) {
 }
 
 export default function Massing3D({ target, autoRotate = true }: { target: MassingTarget; autoRotate?: boolean }) {
-  const camDistance = useMemo(() => clamp(Math.max(target.siteWidthM, target.siteDepthM) * 1.6, 18, 70), [target.siteWidthM, target.siteDepthM]);
+  const { resolved } = useTheme();
+  const palette = useMassingPalette(resolved);
+  const camDistance = useMemo(
+    () => clamp(Math.max(target.siteWidthM, target.siteDepthM) * 1.6, 18, 70),
+    [target.siteWidthM, target.siteDepthM]
+  );
 
   return (
     <div className="h-full w-full">
       <Canvas
+        key={resolved}
         shadows
         dpr={[1, 1.6]}
         gl={{ antialias: true, alpha: false }}
         camera={{ position: [camDistance * 0.85, camDistance * 0.62, camDistance * 0.85], fov: 42 }}
       >
-        <color attach="background" args={["#eef1ee"]} />
-        <fog attach="fog" args={["#eef1ee", camDistance * 1.6, camDistance * 3.2]} />
-        <hemisphereLight intensity={0.55} groundColor="#cfd6cd" />
+        <color attach="background" args={[palette.bg]} />
+        <fog attach="fog" args={[palette.fog, camDistance * 1.6, camDistance * 3.2]} />
+        <hemisphereLight intensity={resolved === "light" ? 0.6 : 0.35} groundColor={palette.ground} />
         <directionalLight
           position={[18, 26, 12]}
-          intensity={1.15}
+          intensity={resolved === "light" ? 1.2 : 0.85}
           castShadow
           shadow-mapSize={[1024, 1024]}
           shadow-camera-left={-30}
@@ -159,12 +205,12 @@ export default function Massing3D({ target, autoRotate = true }: { target: Massi
 
         <Suspense fallback={null}>
           <group position={[0, 0, 0]}>
-            <Building target={target} />
-            <ParcelOutline w={target.siteWidthM} d={target.siteDepthM} color="#8a9490" />
+            <Building target={target} topColor={palette.top} edgeColor={palette.edge} />
+            <ParcelOutline w={target.siteWidthM} d={target.siteDepthM} color={palette.parcel} />
             <ParcelOutline
               w={target.footprintWidthM}
               d={target.footprintDepthM}
-              color={target.governingConstraint === "setback" ? "#b5822a" : "#14877b"}
+              color={target.governingConstraint === "setback" ? palette.warn : palette.accent}
             />
           </group>
 
@@ -173,14 +219,20 @@ export default function Massing3D({ target, autoRotate = true }: { target: Massi
             args={[200, 200]}
             cellSize={2}
             cellThickness={0.5}
-            cellColor="#c7cdc6"
+            cellColor={palette.gridCell}
             sectionSize={10}
             sectionThickness={1}
-            sectionColor="#aab4a8"
+            sectionColor={palette.gridSection}
             fadeDistance={70}
             infiniteGrid
           />
-          <ContactShadows position={[0, 0, 0]} opacity={0.35} scale={80} blur={2.2} far={20} />
+          <ContactShadows
+            position={[0, 0, 0]}
+            opacity={resolved === "light" ? 0.32 : 0.45}
+            scale={80}
+            blur={2.2}
+            far={20}
+          />
         </Suspense>
 
         <Rig autoRotate={autoRotate} />

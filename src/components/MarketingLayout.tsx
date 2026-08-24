@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
 import { useConsult } from "../state/consult";
 
 const LINKS = [
@@ -31,9 +32,10 @@ export default function MarketingLayout() {
       <header
         className="sticky top-0 z-50 transition-all"
         style={{
-          background: scrolled ? "var(--surface-1)" : "transparent",
+          background: scrolled ? "color-mix(in srgb, var(--surface-1) 88%, transparent)" : "transparent",
           borderBottom: scrolled ? "1px solid var(--surface-2-border)" : "1px solid transparent",
-          backdropFilter: scrolled ? "saturate(1.2) blur(10px)" : "none",
+          backdropFilter: scrolled ? "saturate(1.2) blur(12px)" : "none",
+          boxShadow: scrolled ? "var(--shadow-sm)" : "none",
         }}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -55,6 +57,7 @@ export default function MarketingLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <button
               onClick={() => open("General enquiry")}
               className="hidden rounded-full px-4 py-2 text-sm font-semibold sm:inline-block"

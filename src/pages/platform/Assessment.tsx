@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Engine from "../../lib/engine";
 import { useAssessment } from "../../state/assessment";
+import { useTheme } from "../../state/theme";
 import InputPanel from "../../components/InputPanel";
 import ScenarioTabs from "../../components/ScenarioTabs";
 import MetricCard from "../../components/MetricCard";
@@ -12,9 +13,15 @@ import SitePlan2D from "../../components/SitePlan2D";
 import Massing3D, { type MassingTarget } from "../../three/Massing3D";
 import { useConsult } from "../../state/consult";
 
+function cssVar(name: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
 export default function Assessment() {
   const { siteAreaM2, frontageM, roadWidthM, density, programType, scenarioId, setScenario } = useAssessment();
   const { open } = useConsult();
+  const { resolved } = useTheme();
   const [autoRotate, setAutoRotate] = useState(true);
 
   const scenarios = useMemo(() => {
@@ -39,7 +46,7 @@ export default function Assessment() {
   }
 
   const massingTarget: MassingTarget = {
-    key: `${scenarioId}-${siteAreaM2}-${frontageM}-${roadWidthM}-${density}-${programType}`,
+    key: `${scenarioId}-${siteAreaM2}-${frontageM}-${roadWidthM}-${density}-${programType}-${resolved}`,
     siteWidthM: active.inputs.frontage,
     siteDepthM: active.inputs.depth,
     footprintWidthM: active.footprintWidthM || 0.01,
@@ -47,7 +54,10 @@ export default function Assessment() {
     floors: active.floors,
     floorHeightM: Engine.ASSUMED_FLOOR_TO_FLOOR_M,
     governingConstraint: active.governingConstraint,
-    color: active.governingConstraint === "setback" ? "#e0ac52" : "#2bcbb8",
+    color:
+      active.governingConstraint === "setback"
+        ? cssVar("--massing-warn", "#9a7428")
+        : cssVar("--massing-accent", "#0f6f66"),
   };
 
   return (

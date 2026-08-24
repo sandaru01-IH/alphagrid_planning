@@ -3,88 +3,68 @@
 
 /* ------------------------------------------------------------------ */
 /* Design tokens                                                      */
-/* Light theme is the base :root. Dark-mode blocks only redefine      */
-/* tokens, never introduce new selectors for components.              */
+/* Light is the default premium surface. Dark is opt-in via           */
+/* data-theme="dark" (set by ThemeProvider / boot script).            */
 /* ------------------------------------------------------------------ */
-:root {
+:root,
+:root[data-theme="light"] {
   color-scheme: light;
 
-  --surface-0: #f5f6f4;
+  /* Cool porcelain / soft stone — elevated white panels */
+  --surface-0: #eef1ef;
   --surface-1: #ffffff;
-  --surface-2: #ffffff;
-  --surface-2-border: #e2e5e1;
-  --surface-sunken: #edefec;
+  --surface-2: #f7f9f8;
+  --surface-2-border: #d8ded9;
+  --surface-sunken: #e4e9e6;
 
-  --ink-1: #10181c;
-  --ink-2: #45524f;
-  --ink-3: #6f7c78;
-  --line: #dde1dc;
-  --line-strong: #c7cdc6;
+  --ink-1: #0c1418;
+  --ink-2: #3d4a47;
+  --ink-3: #6a7672;
+  --line: #d5dcd7;
+  --line-strong: #b8c2bc;
 
-  --brand: #14877b;
-  --brand-strong: #0d6c62;
-  --brand-soft: #e3f2ee;
-  --brand-ink: #073b35;
+  /* Deep teal — restrained, institutional */
+  --brand: #0f6f66;
+  --brand-strong: #0a564f;
+  --brand-soft: #e4f1ee;
+  --brand-ink: #063832;
 
-  --gold: #b5822a;
-  --gold-strong: #8f6720;
-  --gold-soft: #f7ecd7;
+  /* Soft champagne gold */
+  --gold: #9a7428;
+  --gold-strong: #7a5a1c;
+  --gold-soft: #f5edd9;
 
-  --deep: #1c2b45;
-  --deep-soft: #e7ebf2;
+  --deep: #1a2a42;
+  --deep-soft: #e8edf4;
 
-  --ok: #2f8a56;
-  --ok-soft: #e4f3ea;
-  --warn: #a8671b;
-  --warn-soft: #faf0dc;
-  --crit: #b3413a;
-  --crit-soft: #fbe9e7;
+  --ok: #277a4c;
+  --ok-soft: #e3f2e9;
+  --warn: #9a5f16;
+  --warn-soft: #f8efdc;
+  --crit: #a83832;
+  --crit-soft: #f9e8e6;
 
-  --shadow-color: 30 40 35;
-  --scrim: rgba(10, 14, 12, 0.55);
+  --shadow-color: 28 42 38;
+  --shadow-sm: 0 1px 2px rgba(28, 42, 38, 0.05), 0 1px 3px rgba(28, 42, 38, 0.04);
+  --shadow-md: 0 4px 16px rgba(28, 42, 38, 0.07), 0 1px 3px rgba(28, 42, 38, 0.04);
+  --shadow-lg: 0 18px 40px rgba(28, 42, 38, 0.1), 0 4px 12px rgba(28, 42, 38, 0.05);
+  --scrim: rgba(12, 18, 16, 0.48);
+
+  /* 3D massing scene (light) */
+  --massing-bg: #e8ece9;
+  --massing-fog: #e8ece9;
+  --massing-ground: #c5cec8;
+  --massing-grid-cell: #c2cbc5;
+  --massing-grid-section: #9aa69f;
+  --massing-edge: #1a2420;
+  --massing-parcel: #7a8680;
+  --massing-accent: #0f6f66;
+  --massing-warn: #9a7428;
+  --massing-top: #1a2a42;
 
   --font-display: "Manrope", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --surface-0: #0a0e11;
-    --surface-1: #0f1417;
-    --surface-2: #141a1e;
-    --surface-2-border: #232b30;
-    --surface-sunken: #06090b;
-
-    --ink-1: #eaeeee;
-    --ink-2: #aab4b2;
-    --ink-3: #798482;
-    --line: #232b30;
-    --line-strong: #303a40;
-
-    --brand: #2bcbb8;
-    --brand-strong: #4fe0cd;
-    --brand-soft: #10302c;
-    --brand-ink: #bdf3e9;
-
-    --gold: #e0ac52;
-    --gold-strong: #edc37c;
-    --gold-soft: #362a15;
-
-    --deep: #a9bcdf;
-    --deep-soft: #1a2333;
-
-    --ok: #56c98a;
-    --ok-soft: #123322;
-    --warn: #e0a53f;
-    --warn-soft: #362b13;
-    --crit: #e2726a;
-    --crit-soft: #3a1917;
-
-    --scrim: rgba(3, 5, 6, 0.7);
-  }
 }
 
 :root[data-theme="dark"] {
@@ -121,7 +101,22 @@
   --crit: #e2726a;
   --crit-soft: #3a1917;
 
+  --shadow-color: 0 0 0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.5);
   --scrim: rgba(3, 5, 6, 0.7);
+
+  --massing-bg: #0c1114;
+  --massing-fog: #0c1114;
+  --massing-ground: #1a2226;
+  --massing-grid-cell: #1e282c;
+  --massing-grid-section: #2a363c;
+  --massing-edge: #6a7874;
+  --massing-parcel: #5a6864;
+  --massing-accent: #2bcbb8;
+  --massing-warn: #e0ac52;
+  --massing-top: #a9bcdf;
 }
 
 * {
@@ -134,11 +129,23 @@ html {
 
 body {
   margin: 0;
-  background: var(--surface-0);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(15, 111, 102, 0.07), transparent 55%),
+    radial-gradient(900px 500px at -5% 20%, rgba(154, 116, 40, 0.05), transparent 50%),
+    var(--surface-0);
   color: var(--ink-1);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.25s ease, color 0.2s ease;
+}
+
+:root[data-theme="dark"] body,
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(1100px 560px at 90% -15%, rgba(43, 203, 184, 0.08), transparent 55%),
+    radial-gradient(800px 480px at -10% 25%, rgba(224, 172, 82, 0.05), transparent 50%),
+    var(--surface-0);
 }
 
 h1, h2, h3, h4 {
@@ -159,6 +166,12 @@ h1, h2, h3, h4 {
 
 a {
   color: inherit;
+}
+
+.surface-elevated {
+  background: var(--surface-1);
+  border: 1px solid var(--surface-2-border);
+  box-shadow: var(--shadow-sm);
 }
 
 @media (prefers-reduced-motion: reduce) {
