@@ -1,41 +1,40 @@
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 import { EASE } from "../lib/motion";
 import { useConsult } from "../state/consult";
 import LiveMetricPreview from "../components/LiveMetricPreview";
+import MatrixHeadline, { type MatrixPhrase } from "../components/MatrixHeadline";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
 };
 
-const HEADLINES = [
+const HEADLINES: MatrixPhrase[] = [
   {
     id: "legally",
-    before: "Know what a parcel can ",
+    text: "Know what a parcel can legally become — before you spend a rupee on design.",
     highlight: "legally become",
-    after: " — before you spend a rupee on design.",
   },
   {
     id: "clarity",
-    before: "Turn planning rules into ",
+    text: "Turn planning rules into buildable clarity — in minutes, not months.",
     highlight: "buildable clarity",
-    after: " — in minutes, not months.",
   },
   {
     id: "confidence",
-    before: "Move from speculation to ",
+    text: "Move from speculation to cited confidence — every number labelled, every limit explained.",
     highlight: "cited confidence",
-    after: " — every number labelled, every limit explained.",
   },
   {
     id: "ai",
-    before: "AI-enabled planning assistance for ",
+    text: "AI-enabled planning assistance for every step — from sketch to capacity to brief.",
     highlight: "every step",
-    after: " — from sketch to capacity to brief.",
   },
 ];
+
+const HOLD_MS = 4800;
 
 const CAPABILITIES = [
   {
@@ -97,15 +96,12 @@ export default function Home() {
   useEffect(() => {
     const id = window.setInterval(() => {
       setHeadlineIdx((i) => (i + 1) % HEADLINES.length);
-    }, 5200);
+    }, HOLD_MS);
     return () => window.clearInterval(id);
   }, []);
 
-  const headline = HEADLINES[headlineIdx];
-
   return (
     <div>
-      {/* HERO */}
       <section className="relative overflow-hidden px-6 pt-16 pb-24 md:pt-24">
         <div
           aria-hidden
@@ -125,22 +121,13 @@ export default function Home() {
             >
               AI-enabled planning assistance
             </span>
-            <div className="relative mt-5 min-h-[7.5rem] sm:min-h-[9.5rem]">
-              <AnimatePresence mode="wait">
-                <motion.h1
-                  key={headline.id}
-                  initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
-                  transition={{ duration: 0.55, ease: EASE }}
-                  className="absolute inset-x-0 top-0 text-[2.6rem] font-extrabold leading-[1.06] sm:text-6xl"
-                >
-                  {headline.before}
-                  <span style={{ color: "var(--brand)" }}>{headline.highlight}</span>
-                  {headline.after}
-                </motion.h1>
-              </AnimatePresence>
-            </div>
+
+            <MatrixHeadline
+              phrases={HEADLINES}
+              activeIndex={headlineIdx}
+              className="mt-5 text-[2.35rem] font-extrabold leading-[1.12] sm:text-5xl lg:text-[3.25rem]"
+            />
+
             <p className="mt-6 max-w-xl text-lg leading-relaxed" style={{ color: "var(--ink-2)" }}>
               AlphaGRID converts planning regulations, your parcel's geometry, and your intent into a
               cited, explainable development-capacity assessment — with map sketching, animated 3D massing,
@@ -167,18 +154,19 @@ export default function Home() {
               <HeroPoint>Draw your land on a live map</HeroPoint>
               <HeroPoint>Cited capacity — never a black box</HeroPoint>
             </div>
-            <div className="mt-4 flex gap-1.5" aria-hidden>
+            <div className="mt-5 flex gap-1.5" role="tablist" aria-label="Headline phrases">
               {HEADLINES.map((h, i) => (
                 <button
                   key={h.id}
                   type="button"
+                  role="tab"
+                  aria-selected={i === headlineIdx}
                   onClick={() => setHeadlineIdx(i)}
                   className="h-1.5 rounded-full transition-all"
                   style={{
                     width: i === headlineIdx ? 22 : 8,
                     background: i === headlineIdx ? "var(--brand)" : "var(--line-strong)",
                   }}
-                  aria-label={`Show headline ${i + 1}`}
                 />
               ))}
             </div>
@@ -194,7 +182,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TRUST / SOURCES */}
       <section className="border-y px-6 py-10" style={{ borderColor: "var(--surface-2-border)", background: "var(--surface-1)" }}>
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-6">
           <p className="text-sm font-medium" style={{ color: "var(--ink-3)" }}>
@@ -209,7 +196,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CAPABILITIES */}
       <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <motion.div
@@ -259,7 +245,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODES */}
       <section className="px-6 py-24" style={{ background: "var(--surface-1)" }}>
         <div className="mx-auto max-w-7xl">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} variants={fadeUp}>
@@ -298,11 +283,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to="/platform"
-                  className="mt-6 text-sm font-semibold"
-                  style={{ color: "var(--brand)" }}
-                >
+                <Link to="/platform" className="mt-6 text-sm font-semibold" style={{ color: "var(--brand)" }}>
                   Open in {m.id.toLowerCase()} mode →
                 </Link>
               </motion.div>
@@ -311,7 +292,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="px-6 py-24">
         <motion.div
           initial="hidden"

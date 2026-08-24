@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Product from "./pages/Product";
 import Pricing from "./pages/Pricing";
 import Methodology from "./pages/Methodology";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import Overview from "./pages/platform/Overview";
 import Assessment from "./pages/platform/Assessment";
@@ -19,6 +21,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<Product />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/methodology" element={<Methodology />} />
         </Route>
         <Route element={<PlatformLayout />}>

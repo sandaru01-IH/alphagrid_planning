@@ -8,7 +8,8 @@ import { useConsult } from "../state/consult";
 const LINKS = [
   { to: "/product", label: "Platform" },
   { to: "/pricing", label: "Pricing" },
-  { to: "/methodology", label: "Methodology" },
+  { to: "/about", label: "About us" },
+  { to: "/contact", label: "Contact us" },
 ];
 
 export default function MarketingLayout() {
@@ -115,7 +116,6 @@ function Footer() {
             links={[
               ["Overview", "/product"],
               ["Pricing", "/pricing"],
-              ["Methodology & validation", "/methodology"],
               ["Launch tool", "/platform"],
             ]}
           />
@@ -130,8 +130,9 @@ function Footer() {
           <FooterCol
             title="Company"
             links={[
-              ["Coverage area", "/methodology"],
-              ["Contact", "/pricing"],
+              ["About us", "/about"],
+              ["Contact us", "/contact"],
+              ["Methodology", "/methodology"],
             ]}
           />
         </div>
